@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Timeslot;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('title', 100);
             $table->text('description');
-            $table->dateTime('planned_date')->nullable();
+            $table->date('due_date')->nullable();
+            $table->foreignIdFor(Timeslot::class)->nullable();
             $table->boolean('completed')->default(false);
             $table->timestamps();
         });

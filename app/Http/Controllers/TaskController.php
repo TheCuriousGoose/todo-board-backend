@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class TaskController extends Controller
 {
     public function index()
-    {   
+    {
         $tasks = Task::all();
 
         return response()->json($tasks);
@@ -18,17 +18,29 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'title' => 'required|string|max:100',
-            'description' => 'required|string',
-            'planned_date' => 'date|nullable',
+            'title' => 'string|max:100',
+            'description' => 'string',
+            'due_date' => 'date|nullable',
+            'timeslot_id' => 'integer|nullable',
             'completed' => 'boolean'
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if($validator->failed()) {
+        if ($validator->failed()) {
             return response()->json($validator->errors(), 400);
         }
+
+        if (isset($request->due_date) && $validator->validated()['due_date'] && $validator->validated()['timeslot_id']) {
+            $existingTask = Task::where('due_date', $validator->validated()['due_date'])
+                ->where('timeslot_id', $validator->validated()['timeslot_id'])
+                ->first();
+
+            if($existingTask){
+                return response()->json(['error' => 'A task with the same date and timeslot already exists.'], 400);
+            }
+        }
+
 
         $task = Task::create($validator->validated());
 
@@ -45,14 +57,25 @@ class TaskController extends Controller
         $rules = [
             'title' => 'string|max:100',
             'description' => 'string',
-            'planned_date' => 'date|nullable',
+            'due_date' => 'date|nullable',
+            'timeslot_id' => 'integer|nullable',
             'completed' => 'boolean'
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if($validator->failed()) {
+        if ($validator->failed()) {
             return response()->json($validator->errors(), 400);
+        }
+
+        if (isset($request->due_date) && $validator->validated()['due_date'] && $validator->validated()['timeslot_id']) {
+            $existingTask = Task::where('due_date', $validator->validated()['due_date'])
+                ->where('timeslot_id', $validator->validated()['timeslot_id'])
+                ->first();
+
+            if ($existingTask && $existingTask->id !== $task->id) {
+                return response()->json(['error' => 'A task with the same date and timeslot already exists.'], 400);
+            }
         }
 
         $task->update($validator->validated());
@@ -64,6 +87,6 @@ class TaskController extends Controller
     {
         $task->delete();
 
-        return response()->json(null, 204);
+        return response()->json('successfully deleted', 200);
     }
 }

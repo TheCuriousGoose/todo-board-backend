@@ -17,19 +17,21 @@ class TaskSeeder extends Seeder
             [
                 'title' => 'Task 1',
                 'description' => 'Description of Task 1',
-                'planned_date' => Carbon::now()->subHours(3)->roundHours(),
+                'due_date' => Carbon::now(),
+                'timeslot_id' => 1,
                 'completed' => false
             ],
             [
                 'title' => 'Task 2',
                 'description' => 'Description of Task 2',
-                'planned_date' => Carbon::now()->addDays(2)->roundHours(),
+                'due_date' => Carbon::now()->addDays(2),
+                'timeslot_id' => 2,
                 'completed' => false
             ],
             [
                 'title' => 'Task 3',
                 'description' => 'Description of Task 3',
-                'planned_date' => Carbon::now()->addDays(4)->roundHours(),
+                'due_date' => null,
                 'completed' => false
             ]
         ];

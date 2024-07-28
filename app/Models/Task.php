@@ -12,11 +12,12 @@ class Task extends Model
     protected $fillable = [
         'title',
         'description',
-        'planned_date',
+        'due_date',
+        'timeslot_id',
         'completed'
     ];
 
     protected $casts = [
-        'planned_date' => 'datetime'
+        'due_date' => 'datetime'
     ];
 }
