@@ -12,3 +12,4 @@
     - php artisan key:generate
     - php artisan migrate (It will ask if it should make the database. If it crashes, please make the database yourself)
     - php artisan db:seed (test data)
+    - php artisan serve (The urls of the front-end are set to the 127.0.0.1:8000 of the php server)
